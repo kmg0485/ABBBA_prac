@@ -4,13 +4,14 @@ from django.contrib.auth.models import (
 )
 
 class UserManager(BaseUserManager):
-    def create_user(self, nickname, password=None):
+    def create_user(self, nickname, email, phonenumber, password=None, ):
         if not nickname:
             raise ValueError('Users must have a nickname')
 
         user = self.model(
             nickname=self.normalize_email(nickname),
-
+            email = email,
+            phonenumber=phonenumber
         )
 
         user.set_password(password)
