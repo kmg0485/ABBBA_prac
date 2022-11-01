@@ -9,7 +9,7 @@ from rest_framework.generics import get_object_or_404
 from users import serializers
 from users.models import User
 
-from users.serializers import CustomTokenObtainPairSerializer, UserSerializer
+from users.serializers import CustomTokenObtainPairSerializer, UserSerializer, UserProfileSerializer
 
 # Create your views here.
 
@@ -26,3 +26,22 @@ class UserView(APIView):
         
 class CustomTokenObtainPairView(TokenObtainPairView):
     serializer_class = CustomTokenObtainPairSerializer
+    
+
+class FollowView(APIView):
+    def post(self, request, user_id):
+        you = get_object_or_404(User, id=user_id)
+        me = request.user
+        if me in you.followers.all():
+            you.followers.remove(me)
+            return Response("unfollow했습니다.", status=status.HTTP_200_OK)
+        else:
+            you.followers.add(me)
+            return Response("follow했습니다.", status=status.HTTP_200_OK)
+        
+class ProfileView(APIView):
+    def get(self, request, user_id):
+        user = get_object_or_404(User, id=user_id)
+        serializer = UserProfileSerializer(user)
+        
+        return Response(serializer.data)

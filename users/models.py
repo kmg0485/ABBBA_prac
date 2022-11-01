@@ -30,6 +30,7 @@ class User(AbstractBaseUser):
     nickname = models.CharField(max_length=20, verbose_name='nickname', unique=True, blank=False)
     phonenumber = models.TextField(verbose_name='phonenumber',blank=True)
     email = models.EmailField(verbose_name='email', max_length=255, blank=True)
+    followings = models.ManyToManyField('self', symmetrical=False, related_name="followers", blank=True)
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
 

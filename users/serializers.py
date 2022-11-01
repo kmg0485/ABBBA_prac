@@ -2,6 +2,8 @@ from dataclasses import fields
 from rest_framework import serializers
 from users.models import User
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from articles.serializers import ArticleListSerializer
+
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -32,3 +34,14 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
         token['email'] = user.email
         
         return token
+    
+    
+class UserProfileSerializer(serializers.ModelSerializer):
+    followers = serializers.StringRelatedField(many=True)
+    followings = serializers.StringRelatedField(many=True)
+    article_set = ArticleListSerializer(many=True)
+    like = ArticleListSerializer(many=True)
+    
+    class Meta:
+        model = User
+        fields = ("id", "nickname", "email", "followings", "followers", "article_set", "like")
