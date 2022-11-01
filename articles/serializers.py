@@ -2,10 +2,11 @@ from rest_framework import serializers
 from articles.models import Article, Comment
 
 
+
 class CommentSerializer(serializers.ModelSerializer):
     author = serializers.SerializerMethodField()
     
-    def get_user(self, obj):
+    def get_author(self, obj):
         return obj.author.email
     
     class Meta:
@@ -16,8 +17,8 @@ class CommentSerializer(serializers.ModelSerializer):
 
 class ArticleSerializer(serializers.ModelSerializer):
     author = serializers.SerializerMethodField()
-    comments = CommentSerializer(many=True)
-    likes = serializers.StringRelatedField(many=True)
+    comment = CommentSerializer(many=True)
+    like = serializers.StringRelatedField(many=True)
     
     def get_author(self, obj):
         return obj.author.email
@@ -38,14 +39,14 @@ class ArticleListSerializer(serializers.ModelSerializer):
     likes_count = serializers.SerializerMethodField()
     comments_count = serializers.SerializerMethodField()
     
-    def get_user(self, obj):
+    def get_author(self, obj):
         return obj.author.email
     
     def get_likes_count(self, obj):
-        return obj.likes.count()
+        return obj.like.count()
     
     def get_comments_count(self, obj):
-        return obj.comments.count()
+        return obj.comment.count()
     
     class Meta:
         model = Article
